@@ -1,8 +1,9 @@
-let key = 4; //
+
+let cycle = 9;
 
 function encryptText() {
     const text = document.getElementById("inputText").value;
-    const cycles = parseInt(document.getElementById("cycles").value) || 4; // Use default value of 1 if cycles is not a valid number
+    const cycles = parseInt(document.getElementById("cycles").value) || 9; // Use default value of 1 if cycles is not a valid number
 
     if (!text || isNaN(cycles) || cycles <= 0) {
         alert("Please enter some text and a valid number of cycles.");
@@ -10,8 +11,9 @@ function encryptText() {
     }
 
     let encrypted = text;
+    var key = Math.floor(Math.random() * 9) + 1;
     for (let i = 0; i < cycles; i++) {
-        encrypted = encrypt(encrypted);
+        encrypted = encrypt(encrypted,key);
     }
 
     document.getElementById("inputText").value = encrypted;
@@ -19,7 +21,7 @@ function encryptText() {
 
 function decryptText() {
     const coded = document.getElementById("inputText").value;
-    const cycles = parseInt(document.getElementById("cycles").value) || 4; // Use default value of 1 if cycles is not a valid number
+    const cycles = parseInt(document.getElementById("cycles").value) || 9; // Use default value of 1 if cycles is not a valid number
 
     if (!coded || isNaN(cycles) || cycles <= 0) {
         alert("Please enter some text and a valid number of cycles.");
@@ -34,7 +36,7 @@ function decryptText() {
     document.getElementById("inputText").value = decrypted;
 }
 
-function encrypt(text) {
+function encrypt(text,key) {
     let halfLength = Math.floor(text.length / 2);
     let parts = [];
     parts.push(text.substring(0, halfLength));
