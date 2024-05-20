@@ -2,7 +2,7 @@ let key = 4; //
 
 function encryptText() {
     const text = document.getElementById("inputText").value;
-    const cycles = parseInt(document.getElementById("cycles").value) || 1; // Use default value of 1 if cycles is not a valid number
+    const cycles = parseInt(document.getElementById("cycles").value) || 4; // Use default value of 1 if cycles is not a valid number
 
     if (!text || isNaN(cycles) || cycles <= 0) {
         alert("Please enter some text and a valid number of cycles.");
@@ -19,7 +19,7 @@ function encryptText() {
 
 function decryptText() {
     const coded = document.getElementById("inputText").value;
-    const cycles = parseInt(document.getElementById("cycles").value) || 1; // Use default value of 1 if cycles is not a valid number
+    const cycles = parseInt(document.getElementById("cycles").value) || 4; // Use default value of 1 if cycles is not a valid number
 
     if (!coded || isNaN(cycles) || cycles <= 0) {
         alert("Please enter some text and a valid number of cycles.");
