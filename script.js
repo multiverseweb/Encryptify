@@ -59,3 +59,7 @@ function copyText(){
     const copied = document.getElementById("inputText").value;
     navigator.clipboard.writeText(copied);
 }
+
+function clearText(){
+    document.getElementById("inputText").value = "";
+}
