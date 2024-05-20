@@ -6,7 +6,7 @@ function encryptText() {
     const cycles = parseInt(document.getElementById("cycles").value) || 9; // Use default value of 1 if cycles is not a valid number
 
     if (!text || isNaN(cycles) || cycles <= 0) {
-        alert("Please enter some text and a valid number of cycles.");
+        alert("Please enter some text to encrypt.");
         return;
     }
 
@@ -24,7 +24,7 @@ function decryptText() {
     const cycles = parseInt(document.getElementById("cycles").value) || 9; // Use default value of 1 if cycles is not a valid number
 
     if (!coded || isNaN(cycles) || cycles <= 0) {
-        alert("Please enter some text and a valid number of cycles.");
+        alert("Please enter some text to decrypt.");
         return;
     }
 
