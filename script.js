@@ -1,18 +1,46 @@
+let key = 1; // Initialize key with a default value
+
 function encryptText() {
     const text = document.getElementById("inputText").value;
-    if (!text) {
-        alert("Please enter some text to encrypt.");
+    const cycles = parseInt(document.getElementById("cycles").value) || 1; // Use default value of 1 if cycles is not a valid number
+
+    if (!text || isNaN(cycles) || cycles <= 0) {
+        alert("Please enter some text and a valid number of cycles.");
         return;
     }
 
+    let encrypted = text;
+    for (let i = 0; i < cycles; i++) {
+        encrypted = encrypt(encrypted);
+    }
+
+    document.getElementById("inputText").value = encrypted;
+}
+
+function decryptText() {
+    const coded = document.getElementById("inputText").value;
+    const cycles = parseInt(document.getElementById("cycles").value) || 1; // Use default value of 1 if cycles is not a valid number
+
+    if (!coded || isNaN(cycles) || cycles <= 0) {
+        alert("Please enter some text and a valid number of cycles.");
+        return;
+    }
+
+    let decrypted = coded;
+    for (let i = 0; i < cycles; i++) {
+        decrypted = decrypt(decrypted);
+    }
+
+    document.getElementById("inputText").value = decrypted;
+}
+
+function encrypt(text) {
     let halfLength = Math.floor(text.length / 2);
     let parts = [];
     parts.push(text.substring(0, halfLength));
     parts.push(text.substring(halfLength).split("").reverse().join(""));
 
-    let key = Math.floor(Math.random() * 9) + 1;  // Random number between 1 and 9
     let temp1 = [];
-
     parts.forEach(i => {
         let temp2 = "";
         for (let j of i) {
@@ -23,16 +51,10 @@ function encryptText() {
     });
 
     let encrypted = temp1[1] + String(key) + temp1[0];
-    document.getElementById("inputText").value = encrypted;
+    return encrypted;
 }
 
-function decryptText() {
-    const coded = document.getElementById("inputText").value;
-    if (!coded) {
-        alert("Please enter some text to decrypt.");
-        return;
-    }
-
+function decrypt(coded) {
     const keyIndex = Math.floor(coded.length / 2);
     const key = parseInt(coded.charAt(keyIndex));
 
@@ -52,14 +74,14 @@ function decryptText() {
     });
 
     let decrypted = temp1[1] + temp1[0].split("").reverse().join("");
-    document.getElementById("inputText").value = decrypted;
+    return decrypted;
 }
 
-function copyText(){
+function copyText() {
     const copied = document.getElementById("inputText").value;
     navigator.clipboard.writeText(copied);
 }
-
 function clearText(){
     document.getElementById("inputText").value = "";
+    document.getElementById("cycles").value = "";
 }
