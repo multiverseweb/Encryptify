@@ -1,4 +1,4 @@
-let key = 1; // Initialize key with a default value
+let key = 4; //
 
 function encryptText() {
     const text = document.getElementById("inputText").value;
