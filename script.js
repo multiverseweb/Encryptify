@@ -1,12 +1,12 @@
-console.log('Tejas codes :)');
+console.log('Tejas Codes :)')
 let cycle = 9;
 
 function encryptText() {
     const text = document.getElementById("inputText").value;
-    const cycles = parseInt(document.getElementById("cycles").value) || 9;
+    const cycles = parseInt(document.getElementById("cycles").value) || 9; // Use default value of 1 if cycles is not a valid number
 
     if (!text || isNaN(cycles) || cycles <= 0) {
-        alert("Please enter some text to encrypt.");
+        alert("Please enter some text and a valid number of cycles.");
         return;
     }
 
@@ -21,10 +21,10 @@ function encryptText() {
 
 function decryptText() {
     const coded = document.getElementById("inputText").value;
-    const cycles = parseInt(document.getElementById("cycles").value) || 9;
+    const cycles = parseInt(document.getElementById("cycles").value) || 9; // Use default value of 1 if cycles is not a valid number
 
     if (!coded || isNaN(cycles) || cycles <= 0) {
-        alert("Please enter some text to decrypt.");
+        alert("Please enter some text and a valid number of cycles.");
         return;
     }
 

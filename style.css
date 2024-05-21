@@ -53,11 +53,10 @@ textarea:hover{
 }
 
 .dataverse{
-    margin-top: 50px;
+    margin-top: 40px;
     display: flex;
-    position: fixed;
     bottom: 30px;
-    left: 50%;
+    margin-left: 50%;
     transform: translate(-50%);
     justify-content: center;
 }
