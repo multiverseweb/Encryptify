@@ -14,7 +14,17 @@
         <p>Encryptify</p>
         <p class="tagline">Text Encoder/Decoder</p>
         <textarea id="inputText" rows="4" placeholder="Enter text to encrypt/decrypt"></textarea>
-        <textarea id="cycles" placeholder="Key (optional)"></textarea>
+        <div class="radio-buttons">
+            <label>
+                <input type="radio" name="encryptionType" value="symmetric" checked>
+                Symmetric Encryption
+            </label>
+            <label>
+                <input type="radio" name="encryptionType" value="asymmetric">
+                Asymmetric Encryption
+            </label>
+        </div>
+        <textarea id="key" placeholder="Key (optional)"></textarea>
         <p class="info">* Remember to use the same key for decryption if provided.</p>
         <div class="buttons">
             <button onclick="encryptText()">Encrypt</button>
@@ -22,8 +32,11 @@
             <button onclick="copyText()">Copy</button>
             <button onclick="clearText()">Clear</button>
         </div>
-        <div class="dataverse"><img src="resources/3dlogo.svg" class="logo"><a href="https://multiverse-dataverse.netlify.app">Dataverse</a></div>
     </div>
+    <footer>
+    <hr>
+        <pre><\> by <a href="https://tejasgupta.vercel.app">Tejas Gupta</a></pre>
+    </footer>
     <script src="script.js"></script>
 </body>
 
