@@ -1,113 +1,208 @@
 console.log('Tejas Codes :)')
-let cycle = 9;
 
 function encryptText() {
+    const isAsymmetric = document.getElementById("asymRadio")?.checked;
+    if (isAsymmetric) {
+        return encryptAsymmetric();
+    }
+
+    const text = document.getElementById("inputText").value;
+    if (!text) {
+        alert("Please enter some text to encrypt.");
+        return;
+    }
+
+    const keyInput = document.getElementById("key").value.trim();
+    let cycles = 2;
+
+    if (keyInput) {
+        if (!isNaN(keyInput) && Number.isInteger(Number(keyInput))) {
+            cycles = parseInt(keyInput);
+        } else {
+            const asciiSum = [...keyInput].reduce((sum, char) => sum + char.charCodeAt(0), 0);
+            cycles = Math.floor(asciiSum / keyInput.length); 
+        }
+    }
+    
+    // Cap cycles between 1 and 3 for fast output
+    cycles = Math.max(1, Math.min(cycles, 3)); 
+
+    let encrypted = text;
+    // Use current date and time instead of random number
+    const timeKey = Date.now();
+    const shift = timeKey % 256;
+    
+    for (let i = 0; i < cycles; i++) {
+        encrypted = encryptSym(encrypted, shift);
+    }
+
+    // Append the time-based key at the end to retrieve it during decryption
+    encrypted = encrypted + "|" + timeKey.toString(36);
+    document.getElementById("inputText").value = encrypted;
+}
+
+function decryptText() {
+    const isAsymmetric = document.getElementById("asymRadio")?.checked;
+    if (isAsymmetric) {
+        return decryptAsymmetric();
+    }
+
+    let coded = document.getElementById("inputText").value;
+    if (!coded) {
+        alert("Please enter some text to decrypt.");
+        return;
+    }
+
+    const keyInput = document.getElementById("key").value.trim();
+    let cycles = 2;
+
+    if (keyInput) {
+        if (!isNaN(keyInput) && Number.isInteger(Number(keyInput))) {
+            cycles = parseInt(keyInput);
+        } else {
+            const asciiSum = [...keyInput].reduce((sum, char) => sum + char.charCodeAt(0), 0);
+            cycles = Math.floor(asciiSum / keyInput.length); 
+        }
+    }
+    
+    // Cap cycles between 1 and 3 for fast output
+    cycles = Math.max(1, Math.min(cycles, 3));
+
+    const lastPipe = coded.lastIndexOf("|");
+    if (lastPipe !== -1) {
+        const timeKeyStr = coded.substring(lastPipe + 1);
+        const timeKey = parseInt(timeKeyStr, 36);
+        if (!isNaN(timeKey)) {
+             const shift = timeKey % 256;
+             coded = coded.substring(0, lastPipe);
+             for (let i = 0; i < cycles; i++) {
+                 coded = decryptSym(coded, shift);
+             }
+             document.getElementById("inputText").value = coded;
+             return;
+        }
+    }
+
+    alert("Invalid symmetric encrypted text format. Missing time key.");
+}
+
+function encryptSym(text, shift) {
+    const halfLength = Math.floor(text.length / 2);
+    const part1 = text.substring(0, halfLength).split("").reverse().join("");
+    const part2 = text.substring(halfLength).split("").reverse().join("");
+    const encode = str => [...str].map(ch => String.fromCharCode((ch.charCodeAt(0) + shift) % 256)).join("");
+    return encode(part2) + encode(part1);
+}
+
+function decryptSym(coded, shift) {
+    const part2Len = Math.ceil(coded.length / 2);
+    const part2Enc = coded.substring(0, part2Len);
+    const part1Enc = coded.substring(part2Len);
+    const decode = str => [...str].map(ch => String.fromCharCode((ch.charCodeAt(0) - shift + 256) % 256)).join("");
+    const part2 = decode(part2Enc).split("").reverse().join("");
+    const part1 = decode(part1Enc).split("").reverse().join("");
+    return part1 + part2;
+}
+
+function encryptAsymmetric() {
     const text = document.getElementById("inputText").value;
     if (!text) {
         alert("Please enter some text to encrypt.");
         return;
     }
     const keyInput = document.getElementById("key").value.trim();
-    let cycles;
+    if (keyInput.length < 3 || isNaN(keyInput)) {
+        alert("Please enter a 3 or more digit number as the key for asymmetric encryption.");
+        return;
+    }
+    
+    const len = keyInput.length;
+    const partLen = Math.floor(len / 3);
+    const a = parseInt(keyInput.substring(0, partLen));
+    const b = parseInt(keyInput.substring(partLen, partLen * 2));
+    const c = parseInt(keyInput.substring(partLen * 2));
+    
+    if (a === 0) {
+        alert("The first part (a) cannot be zero for quadratic roots.");
+        return;
+    }
 
-    if (!isNaN(keyInput) && Number.isInteger(Number(keyInput))) {
-        // If it's an integer number
-        cycles = parseInt(keyInput);
+    const b_over_a = b / a;
+    const c_over_a = c / a;
+    
+    const D = b_over_a * b_over_a - 4 * c_over_a;
+    let r1, r2;
+    if (D >= 0) {
+        r1 = ((-b_over_a + Math.sqrt(D)) / 2).toFixed(4);
+        r2 = ((-b_over_a - Math.sqrt(D)) / 2).toFixed(4);
     } else {
-        // If it's a float or string: compute ASCII sum divided by length
-        const asciiSum = [...keyInput].reduce((sum, char) => sum + char.charCodeAt(0), 0);
-        cycles = Math.floor(asciiSum / keyInput.length); // Round down to integer
+        const real = (-b_over_a / 2).toFixed(4);
+        const imag = (Math.sqrt(-D) / 2).toFixed(4);
+        r1 = `${real}+${imag}i`;
+        r2 = `${real}-${imag}i`;
     }
-     if( isNaN(cycles) || cycles <= 0){
-        cycles = 2; // Default to 7 cycle if input is invalid
-     }
-
-    let encrypted = text;
-    var key = Math.floor(Math.random() * 9) + 1;
-    for (let i = 0; i < cycles; i++) {
-        encrypted = encrypt(encrypted, key);
+    
+    let encrypted = "";
+    for (let i = 0; i < text.length; i++) {
+        const shift = Math.round(i * i + b_over_a * i + c_over_a) % 256;
+        encrypted += String.fromCharCode((text.charCodeAt(i) + shift) % 256);
     }
-
+    
     document.getElementById("inputText").value = encrypted;
+    alert(`Asymmetric Encryption Successful!\nYour decryption keys (roots) are:\nRoot 1: ${r1}\nRoot 2: ${r2}\n\nPlease save them! Format to enter during decryption: "r1, r2" (e.g. "-1.2345, 0.6789")`);
+    document.getElementById("key").value = ""; // Clear key
 }
 
-function decryptText() {
-    const coded = document.getElementById("inputText").value;
-   const keyInput = document.getElementById("key").value.trim();
-    let cycles;
-
-    if (!isNaN(keyInput) && Number.isInteger(Number(keyInput))) {
-        // If it's an integer number
-        cycles = parseInt(keyInput);
-    } else {
-        // If it's a float or string: compute ASCII sum divided by length
-        const asciiSum = [...keyInput].reduce((sum, char) => sum + char.charCodeAt(0), 0);
-        cycles = Math.floor(asciiSum / keyInput.length); // Round down to integer
-    }
-    if (!coded) {
+function decryptAsymmetric() {
+    const text = document.getElementById("inputText").value;
+    if (!text) {
         alert("Please enter some text to decrypt.");
         return;
     }
-    if (isNaN(cycles) || cycles <= 0) {
-        cycles = 2; // Default to 1 cycle if input is invalid
+    const keyInput = document.getElementById("key").value.trim();
+    if (!keyInput.includes(",")) {
+        alert("Please enter the two roots separated by a comma. e.g. '-1.2345, 0.6789'");
+        return;
     }
-
-    let decrypted = coded;
-    for (let i = 0; i < cycles; i++) {
-        decrypted = decrypt(decrypted);
+    
+    const parts = keyInput.split(",");
+    const r1Str = parts[0].trim();
+    const r2Str = parts[1].trim();
+    
+    let b_over_a, c_over_a;
+    
+    if (r1Str.includes("i")) {
+        const matches = r1Str.match(/([+-]?\d+\.?\d*)([+-]\d+\.?\d*)i/);
+        if (matches) {
+            const real1 = parseFloat(matches[1]);
+            const imag1 = parseFloat(matches[2]);
+            b_over_a = -(2 * real1);
+            c_over_a = real1 * real1 + imag1 * imag1;
+        } else {
+            alert("Invalid complex root format.");
+            return;
+        }
+    } else {
+        const r1 = parseFloat(r1Str);
+        const r2 = parseFloat(r2Str);
+        b_over_a = -(r1 + r2);
+        c_over_a = r1 * r2;
     }
-
+    
+    let decrypted = "";
+    for (let i = 0; i < text.length; i++) {
+        const shift = Math.round(i * i + b_over_a * i + c_over_a) % 256;
+        decrypted += String.fromCharCode((text.charCodeAt(i) - shift + 256) % 256);
+    }
+    
     document.getElementById("inputText").value = decrypted;
-}
-function encrypt(text, key) {
-    const halfLength = Math.floor(text.length / 2);
-    const part1 = text.substring(0, halfLength).split("").reverse().join("");
-    const part2 = text.substring(halfLength-1).split("").reverse().join("");
-    const encode = str =>
-        [...str].map(ch => String.fromCharCode((ch.charCodeAt(0) + key) % 256)).join("");
-
-    const encoded1 = encode(part1);
-    const encoded2 = encode(part2);
-
-    // Embed the key at the center (replace one char)
-    const encrypted = (encoded2 + encoded1).split("");
-    const embedIndex = Math.floor(encrypted.length / 2);
-    if (encrypted.length < 2){
-        return encrypted+String.fromCharCode(key + 65);
-    }
-    encrypted[embedIndex] = String.fromCharCode(key + 65); // Embed key
-    return encrypted.join("");
-}
-
-function decrypt(encrypted) {
-    const chars = encrypted.split("");
-    const embedIndex = Math.floor(chars.length / 2);
-    const key = chars[embedIndex].charCodeAt(0) - 65;
-
-    // Restore the encrypted char (best effort — can replace with placeholder or assume it was overwritten)
-    chars[embedIndex] = "*"; // Optional placeholder if needed
-
-    const coded = chars.join("");
-    const halfLength = Math.floor(coded.length / 2);
-
-    const encPart2 = coded.substring(0, halfLength);
-    const encPart1 = coded.substring(halfLength);
-
-    const decode = str =>
-        [...str].map(ch =>
-            String.fromCharCode((ch.charCodeAt(0) - key + 256) % 256)
-        ).join("");
-
-    const part2 = decode(encPart2).split("").reverse().join("");
-    const part1 = decode(encPart1).split("").reverse().join("");
-
-    return part1.substring(0, part1.length - 1) + part2;
 }
 
 function copyText() {
     const copied = document.getElementById("inputText").value;
     navigator.clipboard.writeText(copied);
 }
+
 function clearText() {
     document.getElementById("inputText").value = "";
     document.getElementById("key").value = "";
