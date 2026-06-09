@@ -8,21 +8,23 @@ A professional web application for encrypting and decrypting text securely.
 
 Encryptify provides a simple, intuitive interface to secure text messages. It features two distinct encryption modes: a time-based Symmetric mode that guarantees unique ciphertexts, and a mathematically advanced Asymmetric mode based on quadratic roots.
 
+**Output Format:** All encrypted outputs are finalized into an alphanumeric Base62 format. This guarantees that your ciphertext will always consist strictly of English letters and numbers without any special characters, ensuring maximum compactness while remaining robust and safe for transmission.
+
 ## Encryption Algorithms
 
 ### 1. Symmetric Encryption
 The symmetric mechanism uses a time-based algorithm that processes the text through multiple cycles (capped at 3 for optimal speed).
 
 - **Cycle Determination**: If an optional key is provided, it dictates the number of encryption cycles (between 1 and 3). 
-- **Time-Based Uniqueness**: The encryption relies on the exact millisecond timestamp of when the encryption occurs. This guarantees that encrypting the exact same text twice will produce entirely different encrypted outputs.
-- **Decryption**: The timestamp is seamlessly embedded into the ciphertext. To decrypt, the system extracts this timestamp to mathematically reverse the shift. *Note: If you provided an optional key during encryption, you must provide that exact same key to dictate the correct cycle count during decryption.*
+- **Time-Based Uniqueness**: The encryption utilizes a dynamic shift key derived from the exact millisecond timestamp of when the encryption occurs. This shift guarantees a unique ciphertext while keeping the appended overhead extremely minimal (just 1 byte).
+- **Decryption**: The single-byte shift key is seamlessly appended to the ciphertext. To decrypt, the system extracts this byte to mathematically reverse the shift. *Note: If you provided an optional key during encryption, you must provide that exact same key to dictate the correct cycle count during decryption.*
 
-### 2. Asymmetric Encryption (Quadratic Roots)
+### 2. Asymmetric Encryption (Positive Roots)
 The asymmetric mode leverages quadratic equations to securely shift characters.
 
-- **Encryption (The Lock)**: You provide a 3-or-more digit number (e.g., `153`). The system mathematically splits this into polynomial coefficients (`a`, `b`, and `c`) and shifts every character based on the polynomial curve `x^2 + (b/a)x + (c/a)`.
-- **Decryption Keys (The Keys)**: The system calculates the exact quadratic roots of this polynomial (which may include complex imaginary numbers like `-1.0000+1.4142i`) and alerts you with the results. 
-- **Decryption**: To decrypt the text, the original numeric key will no longer work. You must provide the two quadratic roots as your decryption key (e.g., `-0.6972, -4.3028`). The system mathematically reconstructs the polynomial from these roots to perfectly reverse the encryption.
+- **Encryption (The Lock)**: You provide a 3-or-more digit number (e.g., `153`). The system mathematically splits this into parts (`a`, `b`, and `c`) to generate two unique positive numbers (your decryption roots) and shifts every character based on the corresponding polynomial curve.
+- **Decryption Keys (The Keys)**: The system mathematically derives the specific positive roots associated with your key. These are always clean, positive numbers (no imaginary or complex digits). 
+- **Decryption**: To decrypt the text, the original numeric key will no longer work. You must provide the two positive roots as your decryption key (e.g., `2.5000, 5.5000`). The system mathematically reconstructs the polynomial from these roots to perfectly reverse the encryption.
 
 ## Usage Instructions
 
