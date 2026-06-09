@@ -181,7 +181,8 @@ function encryptAsymmetric() {
     
     let encrypted = "";
     for (let i = 0; i < text.length; i++) {
-        const shift = Math.round(i * i + b_over_a * i + c_over_a) % 256;
+        const rawShift = Math.round((i * i + b_over_a * i + c_over_a) * 1000000);
+        const shift = ((rawShift % 256) + 256) % 256;
         encrypted += String.fromCharCode((text.charCodeAt(i) + shift) % 256);
     }
     
@@ -227,7 +228,8 @@ function decryptAsymmetric() {
     
     let decrypted = "";
     for (let i = 0; i < text.length; i++) {
-        const shift = Math.round(i * i + b_over_a * i + c_over_a) % 256;
+        const rawShift = Math.round((i * i + b_over_a * i + c_over_a) * 1000000);
+        const shift = ((rawShift % 256) + 256) % 256;
         decrypted += String.fromCharCode((text.charCodeAt(i) - shift + 256) % 256);
     }
     
