@@ -10,6 +10,23 @@
 </head>
 
 <body>
+    <!-- Manual Overlay -->
+    <div id="manualOverlay" class="manual-overlay">
+        <button class="close-btn" onclick="closeManual()">X</button>
+        <div class="manual-content">
+            <h2>Encryptify Manual</h2>
+            <p>Welcome to Encryptify!</p>
+            <h3>Symmetric Encryption</h3>
+            <p>Uses a single key to securely scramble text through multiple cycles of obfuscation. If you use a key, you
+                must provide the exact same key to decrypt it.</p>
+            <h3>Asymmetric Encryption</h3>
+            <p>Requires a numeric key of at least 3 digits to encrypt. It will generate two mathematical "roots" (e.g.,
+                2.2, 5.2). To decrypt, you must provide these exact roots separated by a comma.</p>
+            <h3>Legacy Mode</h3>
+            <p>Check this box only if you are trying to decrypt an older string that was encrypted prior to June 9,
+                2026.</p>
+        </div>
+    </div>
     <div class="container">
         <p>Encryptify</p>
         <p class="tagline">Text Encoder/Decoder</p>
@@ -24,18 +41,29 @@
                 Asymmetric Encryption
             </label>
         </div>
+        <div class="radio-buttons" style="margin-top: 10px;">
+            <label>
+                <input type="checkbox" id="legacyMode">
+                Legacy Mode (For texts encrypted before June 9, 2026, 15:40:36)
+            </label>
+        </div>
         <textarea id="key" placeholder="Key (optional)"></textarea>
         <p class="info">* Remember to use the same key for decryption if provided.</p>
         <div class="buttons">
-            <button onclick="encryptText()">Encrypt</button>
-            <button onclick="decryptText()">Decrypt</button>
+            <button id="encryptBtn" onclick="encryptText()">Encrypt</button>
+            <button id="decryptBtn" onclick="decryptText()">Decrypt</button>
             <button onclick="copyText()">Copy</button>
             <button onclick="clearText()">Clear</button>
         </div>
     </div>
     <footer>
-    <hr>
-        <pre><\> by <a href="https://tejasgupta.vercel.app">Tejas Gupta</a></pre>
+        <hr>
+        <div class="footer-content">
+            <button id="helpBtn" class="help-btn" onclick="openManual()">?</button>
+            <div class="footer-text">
+                <pre><\> by <a href="https://github.com/multiverseweb">Tejas Gupta</a></pre>
+            </div>
+        </div>
     </footer>
     <script src="script.js"></script>
 </body>
