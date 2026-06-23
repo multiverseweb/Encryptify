@@ -34,9 +34,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (key) {
         keyInput.value = key;
     }
-    if (type === 'asymmetric') {
+    if (type === 'a' || type === 'asymmetric') {
         if (asymRadio) asymRadio.checked = true;
-    } else if (type === 'symmetric') {
+    } else if (type === 's' || type === 'symmetric') {
         if (symRadio) symRadio.checked = true;
     }
     if (version === '1') {
@@ -46,9 +46,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     updateUI();
     
-    if (action === 'encrypt') {
+    if (action === 'e' || action === 'encrypt') {
         setTimeout(encryptText, 50);
-    } else if (action === 'decrypt') {
+    } else if (action === 'd' || action === 'decrypt') {
         setTimeout(decryptText, 50);
     }
 });
@@ -478,9 +478,9 @@ function copyShareLink() {
     
     if (text) url.searchParams.set('pl', text);
     if (isAsymmetric) {
-        url.searchParams.set('t', 'asymmetric');
+        url.searchParams.set('t', 'a');
     } else {
-        url.searchParams.set('t', 'symmetric');
+        url.searchParams.set('t', 's');
     }
     if (key) url.searchParams.set('k', key);
     
@@ -491,9 +491,9 @@ function copyShareLink() {
     }
     
     if (lastAction === 'encrypt') {
-        url.searchParams.set('a', 'decrypt');
+        url.searchParams.set('a', 'd');
     } else if (lastAction === 'decrypt') {
-        url.searchParams.set('a', 'encrypt');
+        url.searchParams.set('a', 'e');
     }
     
     navigator.clipboard.writeText(url.toString());

@@ -27,12 +27,12 @@ You can manually pass the following parameters:
 | Parameter | Alias | Description | Values |
 | :--- | :--- | :--- | :--- |
 | `pl` | `payload` | The text to pre-fill in the main input box. | Any text string |
-| `t` | `type` | The encryption mode to use. | `symmetric` or `asymmetric` |
+| `t` | `type` | The encryption mode to use. | `s` (symmetric) or `a` (asymmetric) |
 | `k` | `key` | The encryption key or decryption roots to pre-fill. | Any string/number |
 | `v` | *(none)* | The mathematical algorithm version to use. | `1` (Older), `2` (Current) |
-| `a` | `action` | Auto-executes an action immediately on page load. | `encrypt` or `decrypt` |
+| `a` | `action` | Auto-executes an action immediately on page load. | `e` (encrypt) or `d` (decrypt) |
 
-Example URL: `?pl=Hello&t=symmetric&k=123&v=2&a=encrypt`
+Example URL: `?pl=Hello&t=s&k=123&v=2&a=e`
 
 ## Encryption Algorithms
 
