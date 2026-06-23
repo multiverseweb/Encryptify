@@ -6,9 +6,33 @@ A professional web application for encrypting and decrypting text securely.
 
 ## Overview
 
-Encryptify provides a simple, intuitive interface to secure text messages. It features two distinct encryption modes: a time-based Symmetric mode that guarantees unique ciphertexts, and a mathematically advanced Asymmetric mode based on quadratic roots.
+Encryptify is a modern Progressive Web App (PWA) featuring offline capabilities and a premium Neumorphic interface. It provides a simple, intuitive interface to secure text messages through two distinct encryption modes: a time-based Symmetric mode that guarantees unique ciphertexts, and a mathematically advanced Asymmetric mode based on quadratic roots.
 
 **Output Format:** All encrypted outputs are finalized into an alphanumeric Base62 format. This guarantees that your ciphertext will always consist strictly of English letters and numbers without any special characters, ensuring maximum compactness while remaining robust and safe for transmission.
+
+## Algorithm Versions
+
+Encryptify algorithms may update over time. The application allows you to specify which version of the math you are using to ensure older texts can still be decrypted.
+
+- **Current Version (v2) [June 9, 2026 and later]:** The default, modern algorithm that securely handles English text and accurately encodes time-shifts into compact Base62 strings.
+- **Version 1 (v1) [Pre June 9, 2026]:** The original, legacy algorithm. To decrypt texts generated before June 9, 2026, check the "Use Version 1 Algorithm (v1)" box in the interface.
+
+## Intelligent Link Sharing & URL Parameters
+
+Encryptify can be entirely controlled via the URL, essentially functioning as a lightweight API.
+When you click **Copy Link**, the system generates an intelligent URL. If you just encrypted a message, the copied URL automatically instructs the receiver's browser to *decrypt* it upon opening!
+
+You can manually pass the following parameters:
+
+| Parameter | Alias | Description | Values |
+| :--- | :--- | :--- | :--- |
+| `pl` | `payload` | The text to pre-fill in the main input box. | Any text string |
+| `t` | `type` | The encryption mode to use. | `symmetric` or `asymmetric` |
+| `k` | `key` | The encryption key or decryption roots to pre-fill. | Any string/number |
+| `v` | *(none)* | The mathematical algorithm version to use. | `1` (Older), `2` (Current) |
+| `a` | `action` | Auto-executes an action immediately on page load. | `encrypt` or `decrypt` |
+
+Example URL: `?pl=Hello&t=symmetric&k=123&v=2&a=encrypt`
 
 ## Encryption Algorithms
 

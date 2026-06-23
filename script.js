@@ -1,5 +1,7 @@
 console.log('Tejas Codes :)')
 
+let lastAction = null;
+
 document.addEventListener('DOMContentLoaded', () => {
     const symRadio = document.getElementById('symRadio');
     const asymRadio = document.getElementById('asymRadio');
@@ -18,15 +20,47 @@ document.addEventListener('DOMContentLoaded', () => {
 
     symRadio?.addEventListener('change', updateUI);
     asymRadio?.addEventListener('change', updateUI);
-    updateUI(); // Initial call
+    
+    const params = new URLSearchParams(window.location.search);
+    const payload = params.get('pl') || params.get('payload');
+    const type = params.get('t') || params.get('type');
+    const key = params.get('k') || params.get('key');
+    const action = params.get('a') || params.get('action');
+    const version = params.get('v');
+    
+    if (payload) {
+        document.getElementById('inputText').value = payload;
+    }
+    if (key) {
+        keyInput.value = key;
+    }
+    if (type === 'asymmetric') {
+        if (asymRadio) asymRadio.checked = true;
+    } else if (type === 'symmetric') {
+        if (symRadio) symRadio.checked = true;
+    }
+    if (version === '1') {
+        const v1Mode = document.getElementById('v1Mode');
+        if (v1Mode) v1Mode.checked = true;
+    }
+    
+    updateUI();
+    
+    if (action === 'encrypt') {
+        setTimeout(encryptText, 50);
+    } else if (action === 'decrypt') {
+        setTimeout(decryptText, 50);
+    }
 });
 function encryptText() {
     const isAsymmetric = document.getElementById("asymRadio")?.checked;
     if (isAsymmetric) {
         return encryptAsymmetric();
     }
+    
+    lastAction = 'encrypt';
 
-    const isLegacy = document.getElementById("legacyMode")?.checked;
+    const isLegacy = document.getElementById("v1Mode")?.checked;
     const text = document.getElementById("inputText").value;
     if (!text) {
         alert("Please enter some text to encrypt.");
@@ -91,8 +125,10 @@ function decryptText() {
     if (isAsymmetric) {
         return decryptAsymmetric();
     }
+    
+    lastAction = 'decrypt';
 
-    const isLegacy = document.getElementById("legacyMode")?.checked;
+    const isLegacy = document.getElementById("v1Mode")?.checked;
     let codedB62 = document.getElementById("inputText").value;
     if (!codedB62) {
         alert("Please enter some text to decrypt.");
@@ -196,7 +232,8 @@ function decryptSym(coded, shift) {
 }
 
 function encryptAsymmetric() {
-    const isLegacy = document.getElementById("legacyMode")?.checked;
+    lastAction = 'encrypt';
+    const isLegacy = document.getElementById("v1Mode")?.checked;
     const text = document.getElementById("inputText").value;
     if (!text) {
         alert("Please enter some text to encrypt.");
@@ -253,7 +290,8 @@ function encryptAsymmetric() {
 }
 
 function decryptAsymmetric() {
-    const isLegacy = document.getElementById("legacyMode")?.checked;
+    lastAction = 'decrypt';
+    const isLegacy = document.getElementById("v1Mode")?.checked;
     const codedB62 = document.getElementById("inputText").value;
     if (!codedB62) {
         alert("Please enter some text to decrypt.");
@@ -428,4 +466,44 @@ function showLoader(btnId, loadingText, callback) {
             }
         }
     }, 20);
+}
+
+function copyShareLink() {
+    const text = document.getElementById("inputText").value;
+    const isAsymmetric = document.getElementById("asymRadio")?.checked;
+    const key = document.getElementById("key").value.trim();
+    const isV1 = document.getElementById("v1Mode")?.checked;
+    
+    const url = new URL(window.location.origin + window.location.pathname);
+    
+    if (text) url.searchParams.set('pl', text);
+    if (isAsymmetric) {
+        url.searchParams.set('t', 'asymmetric');
+    } else {
+        url.searchParams.set('t', 'symmetric');
+    }
+    if (key) url.searchParams.set('k', key);
+    
+    if (isV1) {
+        url.searchParams.set('v', '1');
+    } else {
+        url.searchParams.set('v', '2');
+    }
+    
+    if (lastAction === 'encrypt') {
+        url.searchParams.set('a', 'decrypt');
+    } else if (lastAction === 'decrypt') {
+        url.searchParams.set('a', 'encrypt');
+    }
+    
+    navigator.clipboard.writeText(url.toString());
+    
+    const btn = document.getElementById('copyLinkBtn');
+    if (btn) {
+        const originalText = btn.innerText;
+        btn.innerText = "Copied!";
+        setTimeout(() => {
+            btn.innerText = originalText;
+        }, 2000);
+    }
 }

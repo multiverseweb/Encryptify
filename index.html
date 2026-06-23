@@ -25,38 +25,47 @@
             <h3>Asymmetric Encryption</h3>
             <p>Requires a numeric key of at least 3 digits to encrypt. It will generate two mathematical "roots" (e.g.,
                 2.2, 5.2). To decrypt, you must provide these exact roots separated by a comma.</p>
-            <h3>Legacy Mode</h3>
-            <p>Check this box only if you are trying to decrypt an older string that was encrypted prior to June 9,
-                2026.</p>
+            <h3>Algorithm Versions</h3>
+            <p><strong>Current Version (v2) [June 9, 2026 and later]:</strong> The default, modern secure algorithm.</p>
+            <p><strong>Version 1 (v1) [Pre June 9, 2026]:</strong> Check the "Use Version 1 Algorithm" box only if you are trying to decrypt an older string that was encrypted with v1.</p>
+            <h3>Limitations</h3>
+            <p><strong>Note:</strong> Encryptify is strictly designed for standard English characters and numbers. Encrypting special Unicode characters (such as emojis, Greek letters, or non-Latin alphabets) is not supported and will result in corrupted text upon decryption.</p>
         </div>
     </div>
     <div class="container">
         <p>Encryptify</p>
         <p class="tagline">Text Encoder/Decoder</p>
-        <textarea id="inputText" rows="4" placeholder="Enter text to encrypt/decrypt"></textarea>
-        <div class="radio-buttons">
-            <label>
-                <input type="radio" id="symRadio" name="encryptionType" value="symmetric" checked>
-                Symmetric Encryption
-            </label>
-            <label>
-                <input type="radio" id="asymRadio" name="encryptionType" value="asymmetric">
-                Asymmetric Encryption
-            </label>
-        </div>
-        <div class="radio-buttons" style="margin-top: 10px;">
-            <label>
-                <input type="checkbox" id="legacyMode">
-                Legacy Mode (For texts encrypted before June 9, 2026, 15:40:36)
-            </label>
-        </div>
-        <textarea id="key" placeholder="Key (optional)"></textarea>
-        <p class="info">* Remember to use the same key for decryption if provided.</p>
-        <div class="buttons">
-            <button id="encryptBtn" onclick="encryptText()">Encrypt</button>
-            <button id="decryptBtn" onclick="decryptText()">Decrypt</button>
-            <button onclick="copyText()">Copy</button>
-            <button onclick="clearText()">Clear</button>
+        <div class="form-wrapper">
+            <label class="input-label" for="inputText">Payload</label>
+            <textarea id="inputText" rows="4" placeholder="Enter text to encrypt/decrypt"></textarea>
+            
+            <div class="segmented-control">
+                <input type="radio" id="symRadio" name="encryptionType" value="symmetric" checked hidden>
+                <label for="symRadio" class="toggle-btn">Symmetric</label>
+                
+                <input type="radio" id="asymRadio" name="encryptionType" value="asymmetric" hidden>
+                <label for="asymRadio" class="toggle-btn">Asymmetric</label>
+            </div>
+            
+            <div class="checkbox-container">
+                <input type="checkbox" id="v1Mode" hidden>
+                <label for="v1Mode" class="checkbox-label">
+                    <span class="custom-checkbox"></span>
+                    Use Version 1 Algorithm <span class="checkbox-subtext">(v1 - Pre June 9, 2026)</span>
+                </label>
+            </div>
+            
+            <label class="input-label" for="key">Encryption Key</label>
+            <textarea id="key" placeholder="Key (optional)"></textarea>
+            <p class="info">* Remember to use the same key for decryption if provided.</p>
+
+            <div class="buttons">
+                <button id="encryptBtn" onclick="encryptText()">Encrypt</button>
+                <button id="decryptBtn" onclick="decryptText()">Decrypt</button>
+                <button onclick="copyText()">Copy</button>
+                <button onclick="clearText()">Clear</button>
+                <button id="copyLinkBtn" onclick="copyShareLink()">Copy Link</button>
+            </div>
         </div>
     </div>
     <footer>
