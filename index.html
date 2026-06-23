@@ -7,6 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Encryptify</title>
     <link rel="shortcut icon" href="resources/2dlogo.svg" type="image/x-icon">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#161616">
+    <link rel="apple-touch-icon" href="resources/encryptify.png">
 </head>
 
 <body>
@@ -66,6 +69,15 @@
         </div>
     </footer>
     <script src="script.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(registration => console.log('ServiceWorker registered'))
+                    .catch(error => console.log('ServiceWorker registration failed:', error));
+            });
+        }
+    </script>
 </body>
 
 </html>

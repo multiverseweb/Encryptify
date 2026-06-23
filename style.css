@@ -1,9 +1,9 @@
 :root {
-    --bg-color: #262626;
+    --bg-color: #161616;
     --text-primary: #e0e0e0;
     --text-secondary: #b0b0b0;
-    --shadow-dark: #181818;
-    --shadow-light: #343434;
+    --shadow-dark: #0d0d0d;
+    --shadow-light: #1f1f1f;
     --shadow-overlay: rgba(0, 0, 0, 0.5);
     --border-subtle: rgba(255, 255, 255, 0.1);
     --white: white;

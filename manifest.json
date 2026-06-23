@@ -1,0 +1,21 @@
+{
+    "name": "Encryptify",
+    "short_name": "Encryptify",
+    "description": "Secure Text Encoder and Decoder",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#161616",
+    "theme_color": "#161616",
+    "icons": [
+        {
+            "src": "resources/encryptify.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "src": "resources/2dlogo.svg",
+            "sizes": "any",
+            "type": "image/svg+xml"
+        }
+    ]
+}
