@@ -1,4 +1,4 @@
-# Encryptify
+# <img src="resources/2dlogo.svg" id="project-logo" style="height:30px;"> Encryptify
 
 A professional web application for encrypting and decrypting text securely.
 
